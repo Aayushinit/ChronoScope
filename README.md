@@ -97,4 +97,15 @@ MIT License — free to use, modify, and share.
 ## 👤 Creator
 
 Made with ❤️ by Aayush Kadam  
-🐙 GitHub: [https://github.com/aayushinit](https://github.com/Aayushinit)
+
+---
+
+<p align="center">
+  <a href="https://www.linkedin.com/in/aayush-kadam-a3454a2b8" target="_blank">
+    <img src="https://img.shields.io/badge/LinkedIn-Connect-blue?style=for-the-badge&logo=linkedin&logoColor=white" />
+  </a>
+  <a href="mailto:aayush.kadam23@aiml.sce.edu.in" target="_blank">
+    <img src="https://img.shields.io/badge/Email-Contact-red?style=for-the-badge&logo=gmail&logoColor=white" />
+  </a>
+</p>
+
