@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="assets/newagecalculatordemovideo.gif" alt="ChronoScope Demo" width="100%"/>
+  <img src="assets/homepage.png" alt="ChronoScope Demo" width="100%"/>
 </p>
 
 <p align="center">
@@ -66,7 +66,13 @@ http://localhost:5000
 ```
 
 ---
+---
 
+## 📸 Demo
+
+<img src="assets/newagecalculatordemovideo.gif" alt="ChronoScope Demo"/>
+
+---
 ---
 
 ## 🚀 What Makes It Special?
