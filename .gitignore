@@ -1,0 +1,40 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Distribution / packaging
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Flask stuff
+instance/
+.webassets-cache
+.env
+.venv
+venv/
+ENV/
+env/
+*.env
+
+# macOS and VSCode junk
+.DS_Store
+.vscode/
+
+# Log files
+*.log
+
+# PyCharm
+.idea/

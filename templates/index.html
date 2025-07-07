@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Professional Age Calculator</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .animated-bg {
+            background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+            background-size: 400% 400%;
+            animation: gradient 15s ease infinite;
+        }
+        @keyframes gradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        .result-card {
+            transition: all 0.3s ease;
+            transform: translateY(20px);
+            opacity: 0;
+        }
+        .result-card.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(37, 99, 235, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(37, 99, 235, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(37, 99, 235, 0); }
+        }
+    </style>
+</head>
+<body class="min-h-screen animated-bg font-sans">
+    <div class="container mx-auto px-4 py-12">
+        <!-- Header -->
+        <div class="text-center mb-12">
+            <h1 class="text-4xl md:text-5xl font-bold text-white mb-4">Professional Age Calculator</h1>
+            <p class="text-xl text-white/90 max-w-2xl mx-auto">Calculate your exact age, zodiac sign, and discover interesting facts about your generation</p>
+        </div>
+
+        <!-- Calculator Form -->
+        <div class="max-w-md mx-auto bg-white rounded-lg shadow-2xl overflow-hidden">
+            <div class="p-8">
+                <form id="ageForm" class="space-y-6">
+                    <div>
+                        <label for="birthdate" class="block text-sm font-medium text-gray-700 mb-1">Date of Birth</label>
+                        <input type="date" id="birthdate" name="birthdate" 
+                            class="mt-1 block w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200" 
+                            required max="">
+                    </div>
+                    
+                    <div>
+                        <label for="currentDate" class="block text-sm font-medium text-gray-700 mb-1">Current Date (Optional)</label>
+                        <input type="date" id="currentDate" name="currentDate" 
+                            class="mt-1 block w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200">
+                    </div>
+                    
+                    <div>
+                        <label for="timezone" class="block text-sm font-medium text-gray-700 mb-1">Timezone (for precision)</label>
+                        <select id="timezone" name="timezone" 
+                            class="mt-1 block w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200">
+                            <option value="auto">Auto-detect (browser timezone)</option>
+                            <option value="UTC">UTC</option>
+                            <option value="America/New_York">New York (EST/EDT)</option>
+                            <option value="Europe/London">London (GMT/BST)</option>
+                            <option value="Asia/Tokyo">Tokyo (JST)</option>
+                        </select>
+                    </div>
+                    
+                    <button type="submit" 
+                        class="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition duration-200 pulse">
+                        <i class="fas fa-calculator mr-2"></i> Calculate My Age
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Results Section -->
+        <div id="results" class="mt-12 max-w-4xl mx-auto hidden">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Age Breakdown Card -->
+                <div class="result-card bg-white rounded-lg shadow-xl p-6 transform transition-all">
+                    <div class="flex items-center mb-4">
+                        <div class="p-3 rounded-full bg-blue-100 text-blue-600 mr-4">
+                            <i class="fas fa-user-clock text-xl"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold text-gray-800">Age Breakdown</h3>
+                    </div>
+                    <div class="space-y-3" id="ageDetails">
+                        <div class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-gray-600">Years:</span>
+                            <span class="font-semibold" id="years">-</span>
+                        </div>
+                        <div class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-gray-600">Months:</span>
+                            <span class="font-semibold" id="months">-</span>
+                        </div>
+                        <div class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-gray-600">Days:</span>
+                            <span class="font-semibold" id="days">-</span>
+                        </div>
+                        <div class="flex justify-between border-b border-gray-100 pb-2">
+                            <span class="text-gray-600">Hours:</span>
+                            <span class="font-semibold" id="hours">-</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-gray-600">Minutes:</span>
+                            <span class="font-semibold" id="minutes">-</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Next Birthday Card -->
+                <div class="result-card bg-white rounded-lg shadow-xl p-6 transform transition-all">
+                    <div class="flex items-center mb-4">
+                        <div class="p-3 rounded-full bg-purple-100 text-purple-600 mr-4">
+                            <i class="fas fa-birthday-cake text-xl"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold text-gray-800">Next Birthday</h3>
+                    </div>
+                    <div class="space-y-3">
+                        <div class="mb-2">
+                            <p class="text-gray-600">Days until next birthday</p>
+                            <p class="text-3xl font-bold text-purple-600" id="nextBirthdayDays">-</p>
+                        </div>
+                        <div class="border-t border-gray-100 pt-2">
+                            <p class="text-gray-600">It will be on</p>
+                            <p class="font-semibold" id="nextBirthdayDate">-</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Zodiac Sign Card -->
+                <div class="result-card bg-white rounded-lg shadow-xl p-6 transform transition-all">
+                    <div class="flex items-center mb-4">
+                        <div class="p-3 rounded-full bg-yellow-100 text-yellow-600 mr-4">
+                            <i class="fas fa-star text-xl"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold text-gray-800">Zodiac Sign</h3>
+                    </div>
+                    <div class="text-center p-4">
+                        <div class="text-5xl mb-2" id="zodiacSymbol">♈</div>
+                        <h4 class="text-xl font-bold text-yellow-600 mb-1" id="zodiacName">Aries</h4>
+                        <div class="flex justify-center space-x-2 text-gray-500 text-sm">
+                            <span id="zodiacDates">March 21 - April 19</span>
+                        </div>
+                        <p class="mt-3 text-gray-600 text-sm" id="zodiacTraits">Traits: Energetic, courageous, determined</p>
+                    </div>
+                </div>
+                
+                <!-- Generation Info Card -->
+                <div class="result-card bg-white rounded-lg shadow-xl p-6 transform transition-all">
+                    <div class="flex items-center mb-4">
+                        <div class="p-3 rounded-full bg-red-100 text-red-600 mr-4">
+                            <i class="fas fa-users text-xl"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold text-gray-800">Generation</h3>
+                    </div>
+                    <div class="space-y-3">
+                        <div class="mb-2">
+                            <p class="text-gray-600">You belong to:</p>
+                            <p class="text-2xl font-bold text-red-600" id="generationName">-</p>
+                        </div>
+                        <div class="bg-gray-50 rounded-lg p-3">
+                            <p class="text-gray-600 text-sm" id="generationInfo">-</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Notable Events Card -->
+                <div class="result-card bg-white rounded-lg shadow-xl p-6 transform transition-all">
+                    <div class="flex items-center mb-4">
+                        <div class="p-3 rounded-full bg-green-100 text-green-600 mr-4">
+                            <i class="fas fa-calendar-day text-xl"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold text-gray-800">Notable Events</h3>
+                    </div>
+                    <div class="space-y-3 text-sm">
+                        <div>
+                            <p class="text-gray-600 mb-1">Born in the year:</p>
+                            <p class="font-semibold text-green-600" id="birthYear">-</p>
+                        </div>
+                        <div class="border-t border-gray-100 pt-2">
+                            <p class="text-gray-600 mb-1">Historical events from your birth year:</p>
+                            <ul class="list-disc list-inside space-y-1" id="historicalEvents">
+                                <!-- Filled by JavaScript -->
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Fun Facts Card -->
+                <div class="result-card bg-white rounded-lg shadow-xl p-6 transform transition-all">
+                    <div class="flex items-center mb-4">
+                        <div class="p-3 rounded-full bg-indigo-100 text-indigo-600 mr-4">
+                            <i class="fas fa-lightbulb text-xl"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold text-gray-800">Fun Age Facts</h3>
+                    </div>
+                    <div class="space-y-3 text-sm" id="funFacts">
+                        <!-- Filled by JavaScript -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Set max date for birthdate input to today
+        document.getElementById('birthdate').max = new Date().toISOString().split('T')[0];
+        
+        // Form submission handler
+        document.getElementById('ageForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            calculateAge();
+        });
+
+        function calculateAge() {
+            const birthdateInput = document.getElementById('birthdate').value;
+            const currentDateInput = document.getElementById('currentDate').value || new Date().toISOString().split('T')[0];
+            const timezone = document.getElementById('timezone').value;
+            
+            const birthdate = new Date(birthdateInput);
+            const currentDate = new Date(currentDateInput);
+            
+            // Timezone adjustment
+            let birthdateOffset = 0;
+            let currentOffset = 0;
+            
+            if (timezone === 'auto') {
+                birthdateOffset = birthdate.getTimezoneOffset() * 60000;
+                currentOffset = currentDate.getTimezoneOffset() * 60000;
+            } else if (timezone !== 'UTC') {
+                // For other timezones, we'd typically use a library like moment-timezone
+                // In this simple implementation, we'll just proceed with local time
+            }
+            
+            const adjustedBirthdate = new Date(birthdate.getTime() - birthdateOffset);
+            const adjustedCurrentDate = new Date(currentDate.getTime() - currentOffset);
+            
+            // Calculate the exact age
+            let ageYears = adjustedCurrentDate.getFullYear() - adjustedBirthdate.getFullYear();
+            let ageMonths = adjustedCurrentDate.getMonth() - adjustedBirthdate.getMonth();
+            let ageDays = adjustedCurrentDate.getDate() - adjustedBirthdate.getDate();
+            
+            if (ageDays < 0) {
+                ageMonths--;
+                // Get the last day of the previous month
+                const daysInLastMonth = new Date(
+                    adjustedCurrentDate.getFullYear(),
+                    adjustedCurrentDate.getMonth(),
+                    0
+                ).getDate();
+                ageDays += daysInLastMonth;
+            }
+            
+            if (ageMonths < 0) {
+                ageYears--;
+                ageMonths += 12;
+            }
+            
+            // Calculate total days
+            const diffTime = adjustedCurrentDate - adjustedBirthdate;
+            const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+            
+            // Calculate next birthday
+            const nextBirthday = new Date(
+                adjustedCurrentDate.getFullYear(),
+                adjustedBirthdate.getMonth(),
+                adjustedBirthdate.getDate()
+            );
+            
+            if (nextBirthday < adjustedCurrentDate) {
+                nextBirthday.setFullYear(nextBirthday.getFullYear() + 1);
+            }
+            
+            const daysUntilBirthday = Math.ceil(
+                (nextBirthday - adjustedCurrentDate) / (1000 * 60 * 60 * 24)
+            );
+            
+            // Calculate age in hours and minutes
+            const diffHours = Math.floor(diffTime / (1000 * 60 * 60));
+            const diffMinutes = Math.floor(diffTime / (1000 * 60));
+            
+            // Update the UI with the calculated values
+            document.getElementById('years').textContent = ageYears;
+            document.getElementById('months').textContent = ageMonths;
+            document.getElementById('days').textContent = ageDays;
+            document.getElementById('hours').textContent = diffHours;
+            document.getElementById('minutes').textContent = diffMinutes;
+            document.getElementById('nextBirthdayDays').textContent = daysUntilBirthday;
+            document.getElementById('nextBirthdayDate').textContent = nextBirthday.toDateString();
+            
+            // Calculate zodiac sign
+            const zodiacSign = getZodiacSign(birthdate);
+            document.getElementById('zodiacSymbol').textContent = zodiacSign.symbol;
+            document.getElementById('zodiacName').textContent = zodiacSign.name;
+            document.getElementById('zodiacDates').textContent = `${zodiacSign.startDate} - ${zodiacSign.endDate}`;
+            document.getElementById('zodiacTraits').textContent = `Traits: ${zodiacSign.traits.join(', ')}`;
+            
+            // Determine generation
+            const generation = getGeneration(birthdate.getFullYear());
+            document.getElementById('generationName').textContent = generation.name;
+            document.getElementById('generationInfo').textContent = generation.info;
+            
+            // Historical events
+            document.getElementById('birthYear').textContent = birthdate.getFullYear();
+            const eventsList = document.getElementById('historicalEvents');
+            eventsList.innerHTML = '';
+            getHistoricalEvents(birthdate.getFullYear()).forEach(event => {
+                const li = document.createElement('li');
+                li.textContent = event;
+                eventsList.appendChild(li);
+            });
+            
+            // Fun facts
+            const funFactsDiv = document.getElementById('funFacts');
+            funFactsDiv.innerHTML = '';
+            getFunFacts(ageYears, diffDays).forEach(fact => {
+                const p = document.createElement('p');
+                p.className = 'py-1 border-b border-gray-100';
+                p.textContent = fact;
+                funFactsDiv.appendChild(p);
+            });
+            
+            // Show results with animation
+            document.getElementById('results').classList.remove('hidden');
+            setTimeout(() => {
+                const cards = document.querySelectorAll('.result-card');
+                cards.forEach((card, index) => {
+                    setTimeout(() => {
+                        card.classList.add('show');
+                    }, index * 100);
+                });
+            }, 100);
+        }
+        
+        function getZodiacSign(date) {
+            const month = date.getMonth() + 1; // JS months are 0-indexed
+            const day = date.getDate();
+            
+            // Zodiac signs with dates and traits
+            if ((month === 3 && day >= 21) || (month === 4 && day <= 19)) 
+                return { symbol: '♈', name: 'Aries', startDate: 'March 21', endDate: 'April 19',
+                        traits: ['Energetic', 'Courageous', 'Determined', 'Confident'] };
+            if ((month === 4 && day >= 20) || (month === 5 && day <= 20)) 
+                return { symbol: '♉', name: 'Taurus', startDate: 'April 20', endDate: 'May 20',
+                        traits: ['Reliable', 'Patient', 'Practical', 'Devoted'] };
+            if ((month === 5 && day >= 21) || (month === 6 && day <= 20)) 
+                return { symbol: '♊', name: 'Gemini', startDate: 'May 21', endDate: 'June 20',
+                        traits: ['Versatile', 'Expressive', 'Curious', 'Kind'] };
+            if ((month === 6 && day >= 21) || (month === 7 && day <= 22)) 
+                return { symbol: '♋', name: 'Cancer', startDate: 'June 21', endDate: 'July 22',
+                        traits: ['Intuitive', 'Emotional', 'Nurturing', 'Protective'] };
+            if ((month === 7 && day >= 23) || (month === 8 && day <= 22)) 
+                return { symbol: '♌', name: 'Leo', startDate: 'July 23', endDate: 'August 22',
+                        traits: ['Charismatic', 'Generous', 'Loyal', 'Dramatic'] };
+            if ((month === 8 && day >= 23) || (month === 9 && day <= 22)) 
+                return { symbol: '♍', name: 'Virgo', startDate: 'August 23', endDate: 'September 22',
+                        traits: ['Analytical', 'Kind', 'Hardworking', 'Practical'] };
+            if ((month === 9 && day >= 23) || (month === 10 && day <= 22)) 
+                return { symbol: '♎', name: 'Libra', startDate: 'September 23', endDate: 'October 22',
+                        traits: ['Social', 'Fair-minded', 'Diplomatic', 'Romantic'] };
+            if ((month === 10 && day >= 23) || (month === 11 && day <= 21)) 
+                return { symbol: '♏', name: 'Scorpio', startDate: 'October 23', endDate: 'November 21',
+                        traits: ['Passionate', 'Determined', 'Brave', 'Mysterious'] };
+            if ((month === 11 && day >= 22) || (month === 12 && day <= 21)) 
+                return { symbol: '♐', name: 'Sagittarius', startDate: 'November 22', endDate: 'December 21',
+                        traits: ['Adventurous', 'Optimistic', 'Philosophical', 'Honest'] };
+            if ((month === 12 && day >= 22) || (month === 1 && day <= 19)) 
+                return { symbol: '♑', name: 'Capricorn', startDate: 'December 22', endDate: 'January 19',
+                        traits: ['Disciplined', 'Responsible', 'Patient', 'Ambitious'] };
+            if ((month === 1 && day >= 20) || (month === 2 && day <= 18)) 
+                return { symbol: '♒', name: 'Aquarius', startDate: 'January 20', endDate: 'February 18',
+                        traits: ['Original', 'Independent', 'Friendly', 'Humanitarian'] };
+            if ((month === 2 && day >= 19) || (month === 3 && day <= 20)) 
+                return { symbol: '♓', name: 'Pisces', startDate: 'February 19', endDate: 'March 20',
+                        traits: ['Compassionate', 'Artistic', 'Intuitive', 'Gentle'] };
+        }
+
+        function getGeneration(birthYear) {
+            // Generation definitions based on birth year
+            if (birthYear >= 2013) return { 
+                name: 'Alpha Generation', 
+                info: 'The first generation born entirely in the 21st century, growing up with smartphones, voice assistants, and advanced AI as normal parts of life.' 
+            };
+            if (birthYear >= 1997) return { 
+                name: 'Generation Z', 
+                info: 'The first true digital natives, who cannot remember a time before social media and smartphones shaped our social interactions.' 
+            };
+            if (birthYear >= 1981) return { 
+                name: 'Millennials', 
+                info: 'Came of age during the digital revolution, experiencing both pre-internet childhoods and hyper-connected adulthoods.' 
+            };
+            if (birthYear >= 1965) return { 
+                name: 'Generation X', 
+                info: 'The "latchkey kids" who grew up with increasing divorce rates and more working mothers, becoming independent and self-sufficient.' 
+            };
+            if (birthYear >= 1946) return { 
+                name: 'Baby Boomers', 
+                info: 'Born during the post-World War II baby boom, known for their cultural influence and economic prosperity during their working years.' 
+            };
+            return { 
+                name: 'The Silent Generation', 
+                info: 'Children of the Great Depression who came of age during tumultuous times and were often characterized by traditional values.' 
+            };
+        }
+
+        function getHistoricalEvents(year) {
+            // Sample historical events by year - would ideally be a more comprehensive dataset
+            const eventsByYear = {
+                '2020': ['COVID-19 pandemic spread globally', 'Black Lives Matter protests worldwide'],
+                '2019': ['Hong Kong protests began', 'First image of a black hole captured'],
+                '2018': ['Royal wedding of Prince Harry and Meghan Markle', 'Facebook-Cambridge Analytica data scandal'],
+                '2017': ['#MeToo movement went viral', 'First detection of gravitational waves from neutron stars'],
+                '2016': ['Donald Trump elected US President', 'Pokémon Go launched worldwide'],
+                '2015': ['NASA confirmed liquid water on Mars', 'Paris terrorist attacks'],
+                '2014': ['Ebola outbreak in West Africa', 'Russia annexed Crimea'],
+                '2013': ['Edward Snowden leaked NSA documents', 'Pope Francis became first Jesuit pope'],
+                '2012': ['London Summer Olympics', 'Curiosity rover landed on Mars'],
+                '2011': ['Osama bin Laden killed', 'Arab Spring uprisings'],
+                '2010': ['iPhone 4 released', 'Deepwater Horizon oil spill'],
+                '2009': ['Barack Obama inaugurated as first Black U.S. President', 'H1N1 swine flu pandemic'],
+                '2008': ['Beijing Summer Olympics', 'Lehman Brothers collapsed triggering financial crisis'],
+                '2007': ['First iPhone released', 'Global financial crisis began'],
+                '2006': ['Twitter launched', 'Pluto reclassified as a dwarf planet'],
+                '2005': ['YouTube launched', 'Hurricane Katrina devastated New Orleans'],
+                '2004': ['Facebook launched', 'Indian Ocean earthquake and tsunami'],
+                '2003': ['Human genome project completed', 'Space Shuttle Columbia disaster'],
+                '2002': ['Euro currency introduced', 'NATO expanded eastward'],
+                '2001': ['9/11 terrorist attacks', 'Wikipedia launched'],
+                '2000': ['Y2K concerns', 'Dot-com bubble burst'],
+                '1999': ['Euro introduced', 'Columbine High School massacre'],
+                '1998': ['Google founded', 'Bill Clinton impeachment'],
+                '1997': ['Hong Kong returned to China', 'Dolly the sheep cloned'],
+                '1996': ['DVD format introduced', 'Dolly the sheep born (first cloned mammal)'],
+                '1995': ['Windows 95 released', 'Oklahoma City bombing'],
+                '1994': ['Nelson Mandela became South African President', 'Channel Tunnel opened']
+            };
+            
+            // Find events for the exact year or nearest year with data
+            let events = eventsByYear[year] || ['World continued to evolve with cultural and technological changes'];
+            
+            // If no events for exact year, find the closest year with events
+            if (events.length === 1) {
+                let yearDiff = 1;
+                while (!eventsByYear[year - yearDiff] && !eventsByYear[year + yearDiff]) {
+                    yearDiff++;
+                }
+                
+                if (eventsByYear[year - yearDiff]) {
+                    events = eventsByYear[year - yearDiff];
+                } else if (eventsByYear[year + yearDiff]) {
+                    events = eventsByYear[year + yearDiff];
+                }
+            }
+            
+            return events;
+        }
+
+        function getFunFacts(ageYears, ageDays) {
+            const facts = [];
+            
+            facts.push(`You are approximately ${Math.round(ageDays/7)} weeks old!`);
+            facts.push(`Your heart has beaten about ${Math.round(ageDays * 24 * 60 * 70)} times (assuming 70 bpm).`);
+            
+            if (ageYears > 0) {
+                facts.push(`You've lived through about ${Math.round(ageYears * 1.3)} generations of smartphones.`);
+                facts.push(`In dog years, you'd be about ${ageYears * 7} years old!`);
+            }
+            
+            if (ageDays > 0) {
+                facts.push(`You've blinked approximately ${Math.round(ageDays * 14400)} times (assuming 20 blinks/min).`);
+                facts.push(`Your hair has grown about ${Math.round(ageDays * 0.4125)} cm (if you're average).`);
+            }
+            
+            if (ageYears >= 18) {
+                facts.push("You're old enough to vote in most countries!");
+                if (ageYears >= 21) facts.push("You're old enough to drink in the US!");
+                if (ageYears >= 50) facts.push("You're eligible for AARP membership!");
+            }
+            
+            if (ageYears > 100) {
+                facts.push("Wow! You're among the world's oldest people - congratulations!");
+            } else if (ageYears > 80) {
+                facts.push("You've seen incredible technological changes in your lifetime!");
+            } else if (ageYears > 60) {
+                facts.push("You witnessed the dawn of the digital age firsthand!");
+            } else if (ageYears > 40) {
+                facts.push("You grew up during a time of rapid technological advancement!");
+            } else if (ageYears > 20) {
+                facts.push("You're part of the first generations to grow up with the internet!");
+            } else {
+                facts.push("You're part of the youngest generations who can't remember life before smartphones!");
+            }
+            
+            facts.push("Fun fact: On average, humans spend 25 years asleep in a lifetime.");
+            facts.push("Did you know? The average person laughs about 15 times per day.");
+            
+            return facts;
+        }
+    </script>
+</body>
+</html>
