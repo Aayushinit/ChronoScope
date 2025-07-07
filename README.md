@@ -97,5 +97,4 @@ MIT License — free to use, modify, and share.
 ## 👤 Creator
 
 Made with ❤️ by Aayush Kadam  
-📧 [aayush@email.com](mailto:aayush.kadam23@aiml.sce.edu.in)  
 🐙 GitHub: [https://github.com/aayushinit](https://github.com/Aayushinit)
