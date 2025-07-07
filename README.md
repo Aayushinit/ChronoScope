@@ -67,10 +67,6 @@ http://localhost:5000
 
 ---
 
-## 📸 Demo
-
-<img src="assets/demo.gif" alt="ChronoScope Demo"/>
-
 ---
 
 ## 🚀 What Makes It Special?
