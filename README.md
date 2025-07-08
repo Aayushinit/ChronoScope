@@ -73,6 +73,7 @@ http://localhost:5000
 <img src="assets/newagecalculatordemovideo.gif" alt="ChronoScope Demo"/>
 
 ---
+
 ---
 
 ## 🚀 What Makes It Special?
